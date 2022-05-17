@@ -1,22 +1,22 @@
-from ast import pattern
 import requests
 import re
+import json
+from bs4 import BeautifulSoup
 
-
-
-with open('website-urls.txt') as url_data:
-    urls = url_data.readlines()
-    for url in urls:
-        print(url)
-        list_of_dates = []
+with open('website-urls.json') as website_data:
+    websites = json.load(website_data)
+    for website in websites:
+        url = website.get("url")
+        method = website.get("method")
+        print("\n" + url + "\n")
         page_data = requests.get(url)
         page_str = page_data.text
-        page = page_str.split()
-        pattern = re.compile(r"(?=[^A-Za-z0-9]event[^A-Za-z0-9])(.*)")
-        for match in pattern.finditer(page):
-            date = re.search("\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])", match.group(2))
-            if date:
-                print(date)
-                if date.group(0) not in list_of_dates:
-                    list_of_dates.append(date)
-        print(list_of_dates)
+        soup = BeautifulSoup(page_str, 'html.parser')
+        if method == 1:
+            for link in soup.find_all('a'):
+                href = link.get('href')
+                if not href is None:
+                    if re.search("\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])", href):
+                        print(href)
+        
+        
