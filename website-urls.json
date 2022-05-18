@@ -10,5 +10,9 @@
     {
         "url": "https://www.monocafebar.com/events",
         "method": 2
+    },
+    {
+        "url": "https://www.thehugandpint.com/whats-on",
+        "method": 1
     }
 ]
